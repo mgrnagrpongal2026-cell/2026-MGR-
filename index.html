@@ -78,6 +78,85 @@ header p{
   50% { transform: translateY(-10px); }
 }
 
+/* Audio Player Styles */
+.story-audio-box {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 15px;
+  margin: 20px auto;
+  max-width: 400px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.story-audio-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.story-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.story-play-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.story-play-btn:hover {
+  background: var(--gold-dark);
+  transform: scale(1.05);
+}
+
+.story-play-icon {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+.story-progress-wrap {
+  flex-grow: 1;
+}
+
+.story-progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.story-progress-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.story-time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* Pongal Pot */
 .pongal-container {
   display: flex;
@@ -319,7 +398,7 @@ footer{
 <body>
 
 <header>
-  <h1>🌾 மண்ணில் பிறந்து மரபில் வளர்ந்த மண்ணின் மைந்தர்கள் மைந்தர்கள் 🌾</h1>
+  <h1>🌾 மண்ணில் பிறந்து மரபில் வளர்ந்த மண்ணின் மைந்தர்கள் 🌾</h1>
    <h1>🌾 2026 MGR நகர் பொங்கல் குழு 🌾</h1>
   <p>புது வருடம் உங்களுக்கு நிறைவான மகிழ்ச்சியையும் வெற்றியையும் தரும்!</p>
   
@@ -329,6 +408,33 @@ footer{
     <span>✨</span>
     <span>🌞</span>
     <span>🌾</span>
+  </div>
+  
+  <!-- Fixed Audio Player -->
+  <div class="story-audio-box">
+    <p class="story-audio-title">🎵 இனிய பொங்கல் பாடல்</p>
+    <div class="story-player">
+      <button class="story-play-btn" id="playBtnTop" aria-label="Play">
+        <svg class="story-play-icon" id="playIconTop" viewBox="0 0 24 24">
+          <polygon points="7,5 19,12 7,19"></polygon>
+        </svg>
+      </button>
+      <div class="story-progress-wrap">
+        <div class="story-progress-bar" id="progressBarTop">
+          <div class="story-progress-fill" id="progressFillTop"></div>
+        </div>
+        <div class="story-time-row">
+          <span id="currentTimeTop">00:00</span>
+          <span id="durationTop">00:00</span>
+        </div>
+      </div>
+    </div>
+    <audio id="audioTop">
+      <!-- Using a reliable Pongal song from a public source -->
+      <source src="https://raw.githubusercontent.com/mgrnagrpongal2026-cell/2026-MGR-/blob/main/latest-pongal-song-l-thai-porandhaa-l-aaveykannan-l-michael-l-shanthi-aaveykanna_BZYnBqT0.mp3" type="audio/mpeg">
+      <!-- You can replace the above URL with your actual Pongal song URL -->
+      Your browser does not support the audio element.
+    </audio>
   </div>
   
   <div class="pongal-container">
@@ -352,21 +458,93 @@ footer{
 </footer>
 
 <script>
- const names = [
-            "கிருஷ்ணன்", "கார்த்திக்", "சிவக்குமார்", "ஆனந்தகுமார்", "அருள்",
-            "கோபாலகிருஷ்ணன்", "தேவராஜ்", "சதீஷ்குமார்", "மல்லிகேஸ்வரன்", "சதீஷ்",
-            "கதிரவன்", "முரளி", "மூர்த்தி", "முத்து", "கோபி", "புகழேந்தி",
-            "கார்த்திக்.P", "தங்கராஜ்", "அசோக்", "நரசிம்மன்", "நாராயணன்",
-            "அய்யாசாமி", "கவுண்டப்பன்", "ராமசுந்தரம்", "ஹரி கிருஷ்ணன்", "கன்னியப்பன்",
-            "கோவிந்தசாமி", "முத்துக்குமார்", "காளி", "சக்தி", "சின்னசாமி",
-            "கண்ணன்", "சிவா", "வீரமணி", "வீரமல்லன்", "சக்திவேல்", "சந்தோஷ்",
-            "சுபா", "சேகர்", "காசிராமன்", "வெற்றிவேல்", "சூர்யா", "சூர்ய பிரகாஷ்",
-            "முத்துக்குமார் ஐயர்", "சேட்டு", "தீபக் குமார்", "ராமன்",
-            "முத்துக்குமார்", "பிரபு", "துரை", "பூவரசன்", "நரசிம்மன்",
-            "தாமரைக்கண்ணன்", "பார்த்திபன்", "கெயில் நரசிம்மன்"
-        ];
+const names = [
+  "கிருஷ்ணன்", "கார்த்திக்", "சிவக்குமார்", "ஆனந்தகுமார்", "அருள்",
+  "கோபாலகிருஷ்ணன்", "தேவராஜ்", "சதீஷ்குமார்", "மல்லிகேஸ்வரன்", "சதீஷ்",
+  "கதிரவன்", "முரளி", "மூர்த்தி", "முத்து", "கோபி", "புகழேந்தி",
+  "கார்த்திக்.P", "தங்கராஜ்", "அசோக்", "நரசிம்மன்", "நாராயணன்",
+  "அய்யாசாமி", "கவுண்டப்பன்", "ராமசுந்தரம்", "ஹரி கிருஷ்ணன்", "கன்னியப்பன்",
+  "கோவிந்தசாமி", "முத்துக்குமார்", "காளி", "சக்தி", "சின்னசாமி",
+  "கண்ணன்", "சிவா", "வீரமணி", "வீரமல்லன்", "சக்திவேல்", "சந்தோஷ்",
+  "சுபா", "சேகர்", "காசிராமன்", "வெற்றிவேல்", "சூர்யா", "சூர்ய பிரகாஷ்",
+  "முத்துக்குமார் ஐயர்", "சேட்டு", "தீபக் குமார்", "ராமன்",
+  "முத்துக்குமார்", "பிரபு", "துரை", "பூவரசன்", "நரசிம்மன்",
+  "தாமரைக்கண்ணன்", "பார்த்திபன்", "கெயில் நரசிம்மன்"
+];
 
 const grid = document.getElementById("grid");
+
+// Audio Player Functionality
+function setupAudioPlayer() {
+  const audio = document.getElementById('audioTop');
+  const playBtn = document.getElementById('playBtnTop');
+  const playIcon = document.getElementById('playIconTop');
+  const progressBar = document.getElementById('progressBarTop');
+  const progressFill = document.getElementById('progressFillTop');
+  const currentTimeEl = document.getElementById('currentTimeTop');
+  const durationEl = document.getElementById('durationTop');
+  
+  let isPlaying = false;
+  
+  // Format time from seconds to MM:SS
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  
+  // Update progress bar and time
+  function updateProgress() {
+    const currentTime = audio.currentTime;
+    const duration = audio.duration;
+    
+    if (duration) {
+      const progressPercent = (currentTime / duration) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+      currentTimeEl.textContent = formatTime(currentTime);
+      durationEl.textContent = formatTime(duration);
+    }
+  }
+  
+  // Toggle play/pause
+  function togglePlay() {
+    if (isPlaying) {
+      audio.pause();
+      playIcon.innerHTML = '<polygon points="7,5 19,12 7,19"></polygon>';
+    } else {
+      audio.play();
+      playIcon.innerHTML = '<rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect>';
+    }
+    isPlaying = !isPlaying;
+  }
+  
+  // Set progress on click
+  function setProgress(e) {
+    const width = this.clientWidth;
+    const clickX = e.offsetX;
+    const duration = audio.duration;
+    
+    if (duration) {
+      audio.currentTime = (clickX / width) * duration;
+    }
+  }
+  
+  // Initialize
+  audio.addEventListener('loadedmetadata', () => {
+    durationEl.textContent = formatTime(audio.duration);
+  });
+  
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('ended', () => {
+    isPlaying = false;
+    playIcon.innerHTML = '<polygon points="7,5 19,12 7,19"></polygon>';
+    progressFill.style.width = '0%';
+    currentTimeEl.textContent = '00:00';
+  });
+  
+  playBtn.addEventListener('click', togglePlay);
+  progressBar.addEventListener('click', setProgress);
+}
 
 // Function to create rice grains decoration
 function createRiceGrains() {
@@ -417,6 +595,9 @@ names.forEach((name, index) => {
   
   grid.appendChild(div);
 });
+
+// Initialize audio player
+setupAudioPlayer();
 
 // Initialize rice grains decoration
 createRiceGrains();
